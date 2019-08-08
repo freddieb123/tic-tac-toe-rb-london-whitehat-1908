@@ -1,10 +1,29 @@
 # Helper Methods
+def all_same?(board, index_arr)
+  index_arr.all? do |i|
+    board[i] && board[i] == board[index_arr[0]] && board[i] != " "
+  end
+end
+
+def current_player(board)
+  n_turns = turn_count(board)
+  n_turns % 2 == 0 ? "X" : "O"
+end
+
 def display_board(board)
   puts " #{board[0]} | #{board[1]} | #{board[2]} "
   puts "-----------"
   puts " #{board[3]} | #{board[4]} | #{board[5]} "
   puts "-----------"
   puts " #{board[6]} | #{board[7]} | #{board[8]} "
+end
+
+def draw?(board)
+  won?(board) ? false : full?(board)
+end
+
+def full?(board)
+  board.all? { |e| ["X", "O"].include?(e) } 
 end
 
 def input_to_index(user_input)
@@ -15,12 +34,22 @@ def move(board, index, current_player)
   board[index] = current_player
 end
 
-def position_taken?(board, location)
-  board[location] != " " && board[location] != ""
+def over?(board)
+  won?(board) || draw?(board)
 end
 
-def valid_move?(board, index)
-  index.between?(0,8) && !position_taken?(board, index)
+def play(board)
+  turn(board)
+  over?(board)
+  # if over?(board)
+  #   return
+  # else
+  #   play(board)
+  # end
+end
+
+def position_taken?(board, location)
+  board[location] != " " && board[location] != ""
 end
 
 def turn(board)
@@ -35,18 +64,6 @@ def turn(board)
   end
 end
 
-# Define your play method below
-def play(board)
-  turn(board)
-  over?(board)
-  # if over?(board)
-  #   return
-  # else
-  #   play(board)
-  # end
-end
-
-
 def turn_count(board)
   n_turns = 0
   board.each do |cell|
@@ -55,41 +72,8 @@ def turn_count(board)
   n_turns
 end
 
-def current_player(board)
-  n_turns = turn_count(board)
-  n_turns % 2 == 0 ? "X" : "O"
-end
-
-
-
-# Define your WIN_COMBINATIONS constant
-WIN_COMBINATIONS = [
-  [0, 1, 2],
-  [3, 4, 5],
-  [6, 7, 8],
-  [0, 4, 8],
-  [2, 4, 6],
-  [0, 3, 6],
-  [1, 4, 7],
-  [2, 5, 8]
-]
-
-def all_same?(board, index_arr)
-  index_arr.all? do |i|
-    board[i] && board[i] == board[index_arr[0]] && board[i] != " "
-  end
-end
-
-def full?(board)
-  board.all? { |e| ["X", "O"].include?(e) } 
-end
-
-def draw?(board)
-  won?(board) ? false : full?(board)
-end
-
-def over?(board)
-  won?(board) || draw?(board)
+def valid_move?(board, index)
+  index.between?(0,8) && !position_taken?(board, index)
 end
 
 def winner(board)
@@ -105,3 +89,15 @@ def won?(board)
   end
   nil
 end
+
+# Define your WIN_COMBINATIONS constant
+WIN_COMBINATIONS = [
+  [0, 1, 2],
+  [3, 4, 5],
+  [6, 7, 8],
+  [0, 4, 8],
+  [2, 4, 6],
+  [0, 3, 6],
+  [1, 4, 7],
+  [2, 5, 8]
+]
