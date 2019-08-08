@@ -37,7 +37,6 @@ end
 
 # Define your play method below
 def play(board)
-  # input = gets
   turn(board)
   over?(board)
   # if over?(board)
